@@ -30,12 +30,12 @@ app.get('/', (req, res) => {
 });
 
 app.post('/submit', (req, res) => {
-    const { name, email, job, phone, address, city, state } = req.body;
+    const { username, email, job, contact, address, city, state } = req.body;
 
-    const employeeSql = 'INSERT INTO employee (name, email, job, phone, address, city, state) VALUES (username, email, job, contact,address, city, state)';
+    const employeeSql = 'INSERT INTO employee (username, email, job, contact, address, city, state) VALUES (username, email, job,contact,address, city, state)';
     
     // Use placeholders and provide values as an array
-    con.query(employeeSql, [ name, email, job, phone, address, city, state], (err, result) => {
+    con.query(employeeSql, [ username, email, job, contact, address, city, state], (err, result) => {
         if (err) {
             console.error('Error inserting data into the database:', err);
             res.status(500).send('Error submitting the form');
