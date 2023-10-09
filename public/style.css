@@ -69,3 +69,24 @@ body{
     background-color: rgb(52, 0, 69);
     color:white;
 }
+.buttn button{
+    padding:0.5rem;
+    border-radius:6px;
+    background-color:purple;
+    color:white;
+    border-color:white;
+    border-width: 1px;
+    border-style: solid;
+    width:6rem;
+    box-shadow:3px 3px 2px 1px rgba(65, 65, 66, 0.2);
+
+
+}
+.buttn button a{
+    text-decoration: none;
+    color:white;
+}
+.buttn button:hover{
+   background-color: rgb(52, 0, 69);
+   color:white;
+}

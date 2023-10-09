@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Details</title>
+  <style>
+    /* Add your CSS styles here */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid aliceblue;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    #pagination{
+        text-align:center;
+        margin-top:2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Employee Details</h1>
+
+  <!-- Search Bar -->
+  <input type="text" id="searchInput" placeholder="Search by Name">
+  <button onclick="searchEmployees()">Search</button>
+
+  <!-- Table to Display Employee Data -->
+  <table id="employeeTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Contact</th>
+        <th>Department</th>
+        <th>Address</th>
+        <th>city</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <!-- Employee data will be inserted here dynamically -->
+      <tr>
+        <td>01
+        </td>
+        <td>gazal</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div id="pagination">
+    <button onclick="prevPage()">Previous</button>
+    <span id="currentPage">Page 1</span>
+    <button onclick="nextPage()">Next</button>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    const pageSize = 10;
+  
+    // function searchEmployees() {
+    //   // Code for searching employees (if needed)
+    // }
+  
+    function nextPage() {
+      currentPage++;
+      updateTable();
+    }
+  
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        updateTable();
+      }
+    }
+  
+    async function fetchEmployees() {
+      try {
+        const response = await fetch('/employees');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error fetching employee data:', error);
+        return [];
+      }
+    }
+  
+    async function updateTable() {
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = '';
+  
+      const data = await fetchEmployees();
+  
+      // Display data in the table
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const paginatedData = data.slice(startIndex, endIndex);
+  
+      paginatedData.forEach(employee => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${employee.id}</td>
+          <td>${employee.name}</td>
+          <td>${employee.email}</td>
+          <td>${employee.department}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+      document.getElementById('currentPage').textContent = `Page ${currentPage}`;
+    }
+  
+    updateTable();
+  </script>
+</body>
+</html>

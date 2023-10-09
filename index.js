@@ -1,18 +1,19 @@
-
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
 
-// Create a connection to your MySQL database
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "0000000000",
+    password: "1234567890",
     database: "admin" // Change to your database name
 });
 
-// Connect to the database
 db.connect((err) => {
     if (err) {
         console.error('Error connecting to the database: ' + err.message);
@@ -21,20 +22,13 @@ db.connect((err) => {
     }
 });
 
-// Middleware to parse incoming form data
-app.use(bodyParser.urlencoded({ extended: false }));
-
-// Serve static files (HTML, CSS, etc.) from a "public" folder
 app.use(express.static('public'));
 
-// Handle form submissions
 app.post('/submit', (req, res) => {
-    const { username, email, job, contact, address, city, state, } = req.body;
+    console.log('hi');
+    const { username, email, job, contact, address, city, state } = req.body;
 
-
-    // Insert the form data into the database
     const sql = 'INSERT INTO employee (username, email, job, contact, address, city, state) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    
     db.query(sql, [username, email, job, contact, address, city, state], (err, result) => {
         if (err) {
             console.error('Error inserting data into the database: ' + err.message);
@@ -44,12 +38,9 @@ app.post('/submit', (req, res) => {
             res.send('Thank you for submitting the form!');
         }
     });
-   
 });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
-
-
