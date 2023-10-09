@@ -1,51 +1,55 @@
-const mysql = require("mysql2");
+
 const express = require('express');
+const mysql = require('mysql2');
 const bodyParser = require('body-parser');
-const path = require('path'); // Import the 'path' module
-
 const app = express();
-const port = process.env.PORT || 5000;
 
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true }));
-
-const con = mysql.createConnection({
+// Create a connection to your MySQL database
+const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "0000000000",
-    database: "admin"
+    database: "admin" // Change to your database name
 });
 
-con.connect((err) => {
+// Connect to the database
+db.connect((err) => {
     if (err) {
-        console.error("Error connecting to the database:", err);
-        return;
+        console.error('Error connecting to the database: ' + err.message);
+    } else {
+        console.log('Connected to the database');
     }
-    console.log("Connected to the database");
 });
 
-app.get('/', (req, res) => {
-    // Use 'path.join()' to specify the correct file path
-    res.sendFile(path.join(__dirname, 'public', 'index.html')); // Corrected path
-});
+// Middleware to parse incoming form data
+app.use(bodyParser.urlencoded({ extended: false }));
 
+// Serve static files (HTML, CSS, etc.) from a "public" folder
+app.use(express.static('public'));
+
+// Handle form submissions
 app.post('/submit', (req, res) => {
-    const { username, email, job, contact, address, city, state } = req.body;
+    const { username, email, job, contact, address, city, state, } = req.body;
 
-    const employeeSql = 'INSERT INTO employee (username, email, job, contact, address, city, state) VALUES (username, email, job,contact,address, city, state)';
+
+    // Insert the form data into the database
+    const sql = 'INSERT INTO employee (username, email, job, contact, address, city, state) VALUES (?, ?, ?, ?, ?, ?, ?)';
     
-    // Use placeholders and provide values as an array
-    con.query(employeeSql, [ username, email, job, contact, address, city, state], (err, result) => {
+    db.query(sql, [username, email, job, contact, address, city, state], (err, result) => {
         if (err) {
-            console.error('Error inserting data into the database:', err);
-            res.status(500).send('Error submitting the form');
-            return;
+            console.error('Error inserting data into the database: ' + err.message);
+            res.status(500).send('Internal server error');
+        } else {
+            console.log('Data inserted into the database');
+            res.send('Thank you for submitting the form!');
         }
-        console.log('Form data inserted into the database');
-        res.send('Form submitted successfully');
     });
+   
 });
 
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+    console.log(`Server is running on port ${port}`);
 });
+
+

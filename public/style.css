@@ -1,5 +1,5 @@
-*{
-    margin:0;
+
+  *{  margin:0;
     padding:0;
 
 
@@ -52,7 +52,7 @@ body{
     justify-content:center;
     text-align:center;
 }
-.buttn button{
+.buttn input{
      padding:0.5rem;
      border-radius:6px;
      background-color:purple;
@@ -65,7 +65,7 @@ body{
 
 
 }
-.buttn button:hover{
+.buttn input:hover{
     background-color: rgb(52, 0, 69);
     color:white;
 }
